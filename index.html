@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ 박난이 방 공식 댓글 생성기 ✨</title>
+  
+  <!-- Google Fonts: Outfit (for numbers/English) & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="glass-background"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="glass-panel">
+      <h1>✨ 박난이 방 공식 댓글 생성기 ✨</h1>
+      <p class="subtitle">마음에 드는 멘트를 클릭해서 채팅창에 복사하세요!</p>
+      <a href="https://www.youtube.com/@%EB%B0%95%EB%82%9C%EC%9D%B4-d5n" target="_blank" rel="noopener noreferrer" class="youtube-btn">
+        ▶️ 공식 유튜브 채널 가기
+      </a>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <div class="stats-container">
+        <span class="stat-badge">누적 복사: <strong id="copy-count">0</strong>회</span>
+      </div>
+
+      <!-- Chat Section -->
+      <section class="category-section" data-category="Chat">
+        <div class="section-header">
+          <h2>💬 일상 소통 & 힐링</h2>
+          <button class="glow-btn small-btn shuffle-section-btn">
+            <span>🎲 셔플</span>
+          </button>
+        </div>
+        <div class="card-container"></div>
+      </section>
+
+      <!-- Donation Section -->
+      <section class="category-section" data-category="Donation">
+        <div class="section-header">
+          <h2>🎁 후원 & 슈퍼챗 나이스</h2>
+          <button class="glow-btn small-btn shuffle-section-btn">
+            <span>🎲 셔플</span>
+          </button>
+        </div>
+        <div class="card-container"></div>
+      </section>
+
+      <!-- Music Section -->
+      <section class="category-section" data-category="Music">
+        <div class="section-header">
+          <h2>🎧 감성 음악 & 라이브 감상</h2>
+          <button class="glow-btn small-btn shuffle-section-btn">
+            <span>🎲 셔플</span>
+          </button>
+        </div>
+        <div class="card-container"></div>
+      </section>
+
+      <!-- Party Section (New) -->
+      <section class="category-section" data-category="Party">
+        <div class="section-header">
+          <h2>🕺 댄스 타임 & 텐션 폭발</h2>
+          <button class="glow-btn small-btn shuffle-section-btn">
+            <span>🎲 셔플</span>
+          </button>
+        </div>
+        <div class="card-container"></div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>박난이 님을 응원하는 시청자를 위한 팬메이드 툴입니다. 💖</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/clipboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

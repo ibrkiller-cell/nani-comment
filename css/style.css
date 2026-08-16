@@ -1,0 +1,296 @@
+:root {
+  --bg-color: #0b0c10;
+  --panel-bg: rgba(20, 22, 30, 0.6);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --primary-color: #ff2d75;
+  --secondary-color: #00f2fe;
+  --text-main: #ffffff;
+  --text-muted: #a0a5b5;
+  --card-hover: rgba(255, 255, 255, 0.05);
+  --glass-blur: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans KR', 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Dynamic Animated Background */
+.glass-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  background: radial-gradient(circle at 15% 50%, rgba(255, 45, 117, 0.15), transparent 25%),
+              radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.15), transparent 25%);
+  animation: bg-pulse 10s infinite alternate linear;
+}
+
+@keyframes bg-pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 1;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shine 3s linear infinite;
+  background-size: 200% auto;
+}
+
+@keyframes text-shine {
+  to { background-position: 200% center; }
+}
+
+header .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.youtube-btn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.youtube-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content & Stats */
+.stats-container {
+  text-align: right;
+  margin-bottom: 20px;
+  padding: 0 8px;
+}
+
+.stat-badge {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--panel-border);
+}
+
+.stat-badge strong {
+  color: var(--secondary-color);
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Sections */
+.category-section {
+  margin-bottom: 32px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 8px;
+}
+
+.section-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Glow Buttons */
+.glow-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  border-radius: 50px;
+  padding: 2px;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s;
+}
+
+.glow-btn span {
+  display: block;
+  background: var(--bg-color);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.3s;
+}
+
+.glow-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 45, 117, 0.4);
+}
+
+.glow-btn:hover span {
+  background: transparent;
+}
+
+.small-btn span {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+/* Cards */
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reaction-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.reaction-card:hover {
+  transform: translateY(-2px) scale(1.01);
+  background: var(--card-hover);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.reaction-card:active {
+  transform: scale(0.98);
+}
+
+.card-content {
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--text-main);
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.copy-hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: rgba(0,0,0,0.6);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.reaction-card:hover .copy-hint {
+  opacity: 1;
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(255, 255, 255, 0.95);
+  color: #111;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 30px rgba(255, 45, 117, 0.3);
+  animation: slide-up-fade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.toast.fade-out {
+  animation: fade-out-down 0.3s ease-in forwards;
+}
+
+@keyframes slide-up-fade {
+  0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fade-out-down {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(20px) scale(0.9); }
+}
+
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+
+/* Entrance Animation for Cards */
+.animate-in {
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
