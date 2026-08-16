@@ -21,31 +21,64 @@ document.addEventListener('DOMContentLoaded', () => {
     return result;
   }
 
-  function generateReaction(categoryName) {
-    const data = window.dict[categoryName];
-    if (!data) return "데이터가 없습니다.";
+  // 미리 생성된 200개의 고정 풀을 담을 객체
+  const preGeneratedPools = {};
 
-    // 정적 데이터(속담 퀴즈 등)일 경우 조합하지 않고 바로 반환
-    if (data.type === 'static') {
-      return getRandomItem(data.items);
+  function initPools() {
+    for (const key in window.dict) {
+      if (key === 'emojis') continue;
+      
+      const data = window.dict[key];
+      const pool = new Set();
+      let attempts = 0;
+      
+      // Quiz나 SongQuiz는 이미 고정 배열이므로 200개까지 반복 복사해서 채우기
+      if (data.type === 'static' && (key === 'Quiz' || key === 'SongQuiz')) {
+        const arr = [];
+        for(let i=0; i<200; i++) {
+          arr.push(data.items[i % data.items.length]);
+        }
+        preGeneratedPools[key] = arr;
+        continue;
+      }
+
+      // 200개가 찰 때까지 무작위 조합 생성
+      while (pool.size < 200 && attempts < 10000) {
+        attempts++;
+        let result = "";
+
+        if (data.type === 'emoji_only') {
+          const length = Math.floor(Math.random() * 5) + 18;
+          for(let i=0; i<length; i++) {
+            result += getRandomItem(data.emojiPool);
+          }
+        } else {
+          const prefix = getRandomItem(data.prefixes);
+          const body = getRandomItem(data.bodies);
+          const mid = getRandomItem(data.mids);
+          const suffix = getRandomItem(data.suffixes);
+          const frontEmojis = getRandomEmojis(data.emojis || 'fun', 2, 4);
+          const midEmojis = getRandomEmojis(data.emojis || 'fun', 1, 3);
+          const backEmojis = getRandomEmojis(data.emojis || 'fun', 3, 6);
+
+          result = `${frontEmojis} ${prefix} ${body} ${midEmojis} ${mid} ${suffix} ${backEmojis}`.replace(/\s+/g, ' ').trim();
+        }
+
+        pool.add(result);
+      }
+      preGeneratedPools[key] = Array.from(pool);
     }
+  }
 
-    // 조합형 데이터일 경우
-    const prefix = getRandomItem(data.prefixes);
-    const body = getRandomItem(data.bodies);
-    const mid = data.mids ? getRandomItem(data.mids) : "";
-    const suffix = getRandomItem(data.suffixes);
+  // 데이터 로드 시 풀 생성
+  initPools();
 
-    // 이모지 팍팍 추가 (앞, 중간, 뒤)
-    const frontEmojis = getRandomEmojis(data.emojis, 2, 4); // 앞부분 2~4개
-    const midEmojis = getRandomEmojis(data.emojis, 1, 3);   // 중간부분 1~3개
-    const backEmojis = getRandomEmojis(data.emojis, 3, 6);  // 뒷부분 3~6개
-
-    // 길고 화려한 문장 생성
-    const sentence = `${frontEmojis} ${prefix} ${body} ${midEmojis} ${mid} ${suffix} ${backEmojis}`;
-    
-    // 불필요한 연속 공백 제거
-    return sentence.replace(/\s+/g, ' ').trim();
+  function generateReaction(category) {
+    // 200개로 고정된 풀에서 하나를 무작위로 꺼내옴
+    if (preGeneratedPools[category]) {
+      return getRandomItem(preGeneratedPools[category]);
+    }
+    return "데이터를 불러오는 중입니다...";
   }
 
   function getGeneratedItems(categoryName, count) {
