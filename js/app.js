@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCategory(categoryName, container) {
     container.innerHTML = '';
     
-    const selectedItems = getGeneratedItems(categoryName, 3);
+    const selectedItems = getGeneratedItems(categoryName, 5);
 
     selectedItems.forEach((text, index) => {
       const card = document.createElement('div');
