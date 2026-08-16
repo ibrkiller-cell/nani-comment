@@ -2,20 +2,18 @@
 // 수만 가지 조합을 생성하는 동적 랜덤 추출 및 UI 렌더링 로직
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 데이터 무결성 체크
   if (!window.dict) {
     document.querySelector('main').innerHTML = '<p style="text-align:center; color:red;">데이터를 불러오는 데 실패했습니다. data.js를 확인해주세요.</p>';
     return;
   }
 
-  // 무작위 요소 추출 유틸리티
   function getRandomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  // 이모지 다수 생성기
-  function getRandomEmojis(emojiGroup, count) {
+  function getRandomEmojis(emojiGroup, min, max) {
     const emojis = window.dict.emojis[emojiGroup] || ["✨"];
+    const count = Math.floor(Math.random() * (max - min + 1)) + min;
     let result = "";
     for(let i=0; i<count; i++) {
       result += getRandomItem(emojis);
@@ -23,55 +21,58 @@ document.addEventListener('DOMContentLoaded', () => {
     return result;
   }
 
-  // 1개의 무작위 문장 조합 생성
   function generateReaction(categoryName) {
     const data = window.dict[categoryName];
     if (!data) return "데이터가 없습니다.";
 
+    // 정적 데이터(속담 퀴즈 등)일 경우 조합하지 않고 바로 반환
+    if (data.type === 'static') {
+      return getRandomItem(data.items);
+    }
+
+    // 조합형 데이터일 경우
     const prefix = getRandomItem(data.prefixes);
     const body = getRandomItem(data.bodies);
+    const mid = data.mids ? getRandomItem(data.mids) : "";
     const suffix = getRandomItem(data.suffixes);
 
-    // 랜덤하게 시작이나 끝에 이모지 1~3개 추가
-    const emojiCount = Math.floor(Math.random() * 3) + 1; // 1~3개
-    const extraEmojis = getRandomEmojis(data.emojis, emojiCount);
+    // 이모지 팍팍 추가 (앞, 중간, 뒤)
+    const frontEmojis = getRandomEmojis(data.emojis, 2, 4); // 앞부분 2~4개
+    const midEmojis = getRandomEmojis(data.emojis, 1, 3);   // 중간부분 1~3개
+    const backEmojis = getRandomEmojis(data.emojis, 3, 6);  // 뒷부분 3~6개
 
-    // 50% 확률로 앞에 이모지 추가, 아니면 뒤에 추가
-    if (Math.random() > 0.5) {
-      return `${extraEmojis} ${prefix} ${body} ${suffix}`;
-    } else {
-      return `${prefix} ${body} ${suffix} ${extraEmojis}`;
-    }
+    // 길고 화려한 문장 생성
+    const sentence = `${frontEmojis} ${prefix} ${body} ${midEmojis} ${mid} ${suffix} ${backEmojis}`;
+    
+    // 불필요한 연속 공백 제거
+    return sentence.replace(/\s+/g, ' ').trim();
   }
 
-  // 3개의 랜덤 아이템 추출 (중복 제거)
   function getGeneratedItems(categoryName, count) {
     const items = new Set();
-    while(items.size < count) {
+    let attempts = 0;
+    while(items.size < count && attempts < 100) {
       items.add(generateReaction(categoryName));
+      attempts++;
     }
     return Array.from(items);
   }
 
-  // 특정 카테고리 렌더링 함수
   function renderCategory(categoryName, container) {
     container.innerHTML = '';
     
-    // 3개의 랜덤 멘트 동적 생성
     const selectedItems = getGeneratedItems(categoryName, 3);
 
     selectedItems.forEach((text, index) => {
-      // 카드 요소 생성
       const card = document.createElement('div');
       card.className = 'reaction-card animate-in';
       card.style.animationDelay = `${index * 0.08}s`;
 
       card.innerHTML = `
-        <div class="card-content">${text}</div>
+        <div class="card-content">${text.replace(/\n/g, '<br>')}</div>
         <div class="copy-hint">클릭해서 복사 📋</div>
       `;
 
-      // 클릭 시 클립보드 복사
       card.addEventListener('click', () => {
         if (typeof window.copyToClipboard === 'function') {
           window.copyToClipboard(text);
@@ -82,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 모든 섹션 초기 렌더링 및 셔플 버튼 바인딩
   const sections = document.querySelectorAll('.category-section');
   
   sections.forEach(section => {
@@ -90,12 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = section.querySelector('.card-container');
     const shuffleBtn = section.querySelector('.shuffle-section-btn');
 
-    // 초기 렌더링
     renderCategory(categoryName, container);
 
-    // 개별 셔플 버튼 이벤트
     shuffleBtn.addEventListener('click', () => {
-      // 버튼 애니메이션 효과
       shuffleBtn.style.transform = 'scale(0.9)';
       setTimeout(() => {
         shuffleBtn.style.transform = '';
