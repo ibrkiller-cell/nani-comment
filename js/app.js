@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let attempts = 0;
       
       // Quiz나 SongQuiz는 이미 고정 배열이므로 200개까지 반복 복사해서 채우기
-      if (data.type === 'static' && (key === 'Quiz' || key === 'SongQuiz')) {
+      if (data.type === 'static') {
         const arr = [];
         for(let i=0; i<200; i++) {
           arr.push(data.items[i % data.items.length]);
