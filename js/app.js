@@ -135,4 +135,84 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // AI Polish Integration
+  const aiSubmitBtn = document.getElementById('ai-submit-btn');
+  const aiTeaseBtn = document.getElementById('ai-tease-btn');
+  const aiInput = document.getElementById('ai-input');
+  const aiLoading = document.getElementById('ai-loading');
+  const aiResultContainer = document.getElementById('ai-result-container');
+  const GEMINI_API_KEY = "AQ.Ab8RN6I3zD42GEGDxBB8k1XKg2GR7gAAY7-DcluVX18EqFaqWg";
+
+  async function generateAIComment(promptText) {
+    const text = aiInput.value.trim();
+    if (!text) {
+      if (typeof window.showToast === 'function') window.showToast('먼저 텍스트를 입력해주세요!', true);
+      return;
+    }
+
+    aiLoading.classList.remove('hidden');
+    aiResultContainer.innerHTML = '';
+    aiSubmitBtn.disabled = true;
+    if (aiTeaseBtn) aiTeaseBtn.disabled = true;
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: promptText + `\n\n[사용자 입력]: ${text}`
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      const resultText = data.candidates[0].content.parts[0].text.trim();
+
+      // Render the result as a clickable card
+      const card = document.createElement('div');
+      card.className = 'reaction-card animate-in';
+      card.innerHTML = `
+        <div class="card-content">${resultText.replace(/\n/g, '<br>')}</div>
+        <div class="copy-hint">클릭해서 복사 📋</div>
+      `;
+
+      card.addEventListener('click', () => {
+        if (typeof window.copyToClipboard === 'function') {
+          window.copyToClipboard(resultText);
+        }
+      });
+
+      aiResultContainer.appendChild(card);
+    } catch (error) {
+      console.error(error);
+      if (typeof window.showToast === 'function') window.showToast('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', true);
+    } finally {
+      aiLoading.classList.add('hidden');
+      aiSubmitBtn.disabled = false;
+      if (aiTeaseBtn) aiTeaseBtn.disabled = false;
+    }
+  }
+
+  aiSubmitBtn.addEventListener('click', () => {
+    generateAIComment(`다음 텍스트를 유튜브 인터넷 방송 분위기에 맞게, 감성이 듬뿍 담긴 이모지를 적절히 섞어서 1~2문장의 부드럽고 유쾌한 시청자 채팅 멘트로 예쁘게 다듬어주세요. 반드시 결과 멘트만 출력하세요.`);
+  });
+
+  if (aiTeaseBtn) {
+    aiTeaseBtn.addEventListener('click', () => {
+      generateAIComment(`다음 텍스트를 바탕으로 인터넷 방송 방장(스트리머)을 장난스럽고 유쾌하게 놀리거나 팩트 폭행을 하는 1~2문장의 채팅 멘트로 만들어주세요. 악플이 되지 않도록 선을 지키며, 장난스러운 이모지(😜, 🤣, 👀 등)를 적극 사용하세요. 반드시 결과 멘트만 출력하세요.`);
+    });
+  }
+
 });

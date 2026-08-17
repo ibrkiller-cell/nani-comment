@@ -32,6 +32,28 @@
       <div class="stats-container">
         <span class="stat-badge">누적 복사: <strong id="copy-count">0</strong>회</span>
       </div>
+      <!-- AI Polish Section -->
+      <section class="ai-polish-section">
+        <div class="section-header">
+          <h2>✨ AI 채팅 다듬기</h2>
+        </div>
+        <div class="ai-input-container">
+          <textarea id="ai-input" placeholder="여기에 하고 싶은 말을 대충 적어보세요!&#10;예) 오늘 방송 너무 재밌다" rows="3"></textarea>
+          <div class="ai-button-group" style="display: flex; gap: 10px;">
+            <button id="ai-submit-btn" class="glow-btn" style="flex: 1;">
+              <span>🪄 예쁘게 다듬기</span>
+            </button>
+            <button id="ai-tease-btn" class="glow-btn" style="flex: 1; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #333;">
+              <span>😜 놀리기 (팩폭)</span>
+            </button>
+          </div>
+        </div>
+        <div id="ai-loading" class="hidden">
+          <div class="spinner"></div>
+          <p>AI가 감성을 듬뿍 담아 다듬는 중...</p>
+        </div>
+        <div id="ai-result-container" class="card-container"></div>
+      </section>
 
       <!-- Enter Section -->
       <section class="category-section" data-category="Enter">
